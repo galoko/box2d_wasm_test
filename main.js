@@ -21,6 +21,9 @@ function main(Box2D) {
 	const SCALE = 50;
 	const TRANSLATE = { x: viewportWidth / 2, y: viewportHeight };
 	
+	const FRICTION = 0;
+	const RESTITUTION = 0;
+	
 	const gravity = new Box2D.b2Vec2(0.0, -9.8);
 	const world = new Box2D.b2World(gravity);
 	world.SetContinuousPhysics(false);
@@ -36,8 +39,8 @@ function main(Box2D) {
 		shape.SetAsBox(width / 2, height / 2);
 		
 	    const fixture = wall.CreateFixture(shape, 0.0);
-		fixture.SetRestitution(0);
-		fixture.SetFriction(0);
+		fixture.SetRestitution(RESTITUTION);
+		fixture.SetFriction(FRICTION);
 		
 		return wall;
 	};
@@ -55,8 +58,8 @@ function main(Box2D) {
 		shape.set_m_radius(radius);
 		
 	    const fixture = ball.CreateFixture(shape, 0);
-		fixture.SetRestitution(0);
-		fixture.SetFriction(0);
+		fixture.SetRestitution(RESTITUTION);
+		fixture.SetFriction(FRICTION);
 		
 		const massData = new Box2D.b2MassData();
 		ball.GetMassData(massData);
@@ -182,29 +185,28 @@ function main(Box2D) {
 	
 	window.addEventListener('resize', HandleResize);
 	
-	const ApplyForces = function () {
-		if (!bigBall || !dst_position) {
+	let force = new Box2D.b2Vec2(0, 0);
+	const ApplyForces = function (ball) {
+		if (!ball || !dst_position) {
 			return;
 		}
-		const src_position = bigBall.GetWorldCenter();
+		const src_position = ball.GetWorldCenter();
 		const delta = {
 			x: dst_position.get_x() - src_position.get_x(),
 			y: dst_position.get_y() - src_position.get_y()
 		};
 		
-		const velocity = bigBall.GetLinearVelocity();
+		const velocity = ball.GetLinearVelocity();
 		
-		const mass = bigBall.GetMass();
+		const mass = ball.GetMass();
 		
 		const P = 300;
 		const D = 30;
 		
-		const force = new Box2D.b2Vec2(
-			(delta.x * P - velocity.get_x() * D) * mass,
-			(delta.y * P - velocity.get_y() * D) * mass
-		); 
-		bigBall.ApplyForce(force);
-		bigBall.SetAwake(true);
+		force.set_x((delta.x * P - velocity.get_x() * D) * mass);
+		force.set_y((delta.y * P - velocity.get_y() * D) * mass);
+		ball.ApplyForce(force);
+		ball.SetAwake(true);
 	}
 	
 	let lastTime = performance.now();
@@ -221,7 +223,7 @@ function main(Box2D) {
 		}
 		
 		while (now - lastTime >= DT * 1000) {
-			ApplyForces();
+			ApplyForces(bigBall);
 			
 			world.Step(DT, 1, 1);
 			lastTime += DT * 1000;
