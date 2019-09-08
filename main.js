@@ -107,12 +107,12 @@ function main(Box2D) {
 	CreateWall(0, -WALL_THICKNESS / 2, GLASS_WIDTH * 2, WALL_THICKNESS);
 	CreateWall(-(GLASS_WIDTH + WALL_THICKNESS) / 2, 0, WALL_THICKNESS, WALL_THICKNESS * 2);
 	CreateWall( (GLASS_WIDTH + WALL_THICKNESS) / 2, 0, WALL_THICKNESS, WALL_THICKNESS * 2);
-	CreateWall(0,  WALL_THICKNESS / 2 + GLASS_TALL, GLASS_WIDTH * 2, WALL_THICKNESS);
+	CreateWall(0,  WALL_THICKNESS / 2 + GLASS_TALL * 2, GLASS_WIDTH * 2, WALL_THICKNESS);
 		
 	const COLORS = [
-		"red",
-		"blue",
-		"green"
+		"#EA4335",
+		"#4285F4",
+		"#34A853"
 	];
 	
 	const AREA = (viewportWidth * viewportHeight) / (SCALE * SCALE);
@@ -131,7 +131,7 @@ function main(Box2D) {
 	
 	const ROTATE_GRAVITY = false;
 	
-	const bigBall = !ROTATE_GRAVITY ? CreateBall(0, 1, 1, 30, "yellow") : null;
+	const bigBall = !ROTATE_GRAVITY ? CreateBall(0, 1, 1, 30, "#FBBC05") : null;
 	let dst_position = null;
 	
 	const HandleInput = function (event) {
@@ -206,7 +206,7 @@ function main(Box2D) {
 		}
 		
 		// draw
-		context.clearRect(0, 0, canvas.width, canvas.height);
+		context.clearRect(0, 0, viewportWidth, viewportHeight);
 		let body = world.GetBodyList();
 		while (Box2D.getPointer(body)) {
 			Draw(body);
