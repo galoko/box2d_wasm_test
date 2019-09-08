@@ -102,7 +102,7 @@ function main(Box2D) {
 	
 	const GLASS_WIDTH = viewportWidth / SCALE;
 	const GLASS_TALL = viewportHeight / SCALE;
-	const WALL_THICKNESS = 100 + GLASS_TALL;
+	const WALL_THICKNESS = 1000 + GLASS_TALL;
 	
 	CreateWall(0, -WALL_THICKNESS / 2, GLASS_WIDTH * 2, WALL_THICKNESS);
 	CreateWall(-(GLASS_WIDTH + WALL_THICKNESS) / 2, 0, WALL_THICKNESS, WALL_THICKNESS * 2);
@@ -160,6 +160,28 @@ function main(Box2D) {
 	document.body.addEventListener('touchmove', HandleInput, { passive: false });
 	document.body.addEventListener('touchend', HandleInput, { passive: false });
 	
+	let requestID;
+	
+	const HandleResize = function () {
+		cancelAnimationFrame(requestID);
+		
+		document.body.removeEventListener('mousedown', HandleInput);
+		document.body.removeEventListener('mousemove', HandleInput);
+		document.body.removeEventListener('mouseup', HandleInput);
+					  
+		document.body.removeEventListener('touchstart', HandleInput);
+		document.body.removeEventListener('touchmove', HandleInput);
+		document.body.removeEventListener('touchend', HandleInput);
+			
+		window.removeEventListener('resize', HandleResize);
+			
+		setTimeout(function () {
+			main(Box2D);
+		}, 0);
+	};
+	
+	window.addEventListener('resize', HandleResize);
+	
 	const ApplyForces = function () {
 		if (!bigBall || !dst_position) {
 			return;
@@ -213,8 +235,8 @@ function main(Box2D) {
 			body = body.GetNext();
 		}
 		
-		requestAnimationFrame(Step);
+		requestID = requestAnimationFrame(Step);
 	};
 	
-	requestAnimationFrame(Step);
+	requestID = requestAnimationFrame(Step);
 }
