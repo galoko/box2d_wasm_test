@@ -129,7 +129,7 @@ function main(Box2D) {
 		CreateBall(ballX, ballY, RADIUS, 1, COLORS[ballNum % COLORS.length]);
 	}
 	
-	const ROTATE_GRAVITY = true;
+	const ROTATE_GRAVITY = false;
 	
 	const bigBall = !ROTATE_GRAVITY ? CreateBall(0, 1, 1, 30, "yellow") : null;
 	let dst_position = null;
