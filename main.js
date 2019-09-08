@@ -1,19 +1,25 @@
 Box2D().then(main);
 
 function main(Box2D) {
+	var viewportWidth = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
+	var viewportHeight = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
+
+	document.body.style.width = viewportWidth + "px";
+	document.body.style.height = viewportHeight + "px";
+
 	const canvas = document.getElementById("scene");
 	const context = canvas.getContext('2d');
 	
 	const DPR = window.devicePixelRatio;
 	
-	canvas.width = document.body.clientWidth * DPR;
-	canvas.height = document.body.clientHeight * DPR;
+	canvas.width = viewportWidth * DPR;
+	canvas.height = viewportHeight * DPR;
 	context.scale(DPR, DPR);
 	
 	const DT = 1 / 120;
 	
 	const SCALE = 50;
-	const TRANSLATE = { x: document.body.clientWidth / 2, y: document.body.clientHeight };
+	const TRANSLATE = { x: viewportWidth / 2, y: viewportHeight };
 	
 	const gravity = new Box2D.b2Vec2(0.0, -9.8);
 	const world = new Box2D.b2World(gravity);
@@ -94,8 +100,8 @@ function main(Box2D) {
 	};
 	
 	
-	const GLASS_WIDTH = document.body.clientWidth / SCALE;
-	const GLASS_TALL = document.body.clientHeight / SCALE;
+	const GLASS_WIDTH = viewportWidth / SCALE;
+	const GLASS_TALL = viewportHeight / SCALE;
 	const WALL_THICKNESS = 100 + GLASS_TALL;
 	
 	CreateWall(0, -WALL_THICKNESS / 2, GLASS_WIDTH * 2, WALL_THICKNESS);
@@ -109,7 +115,7 @@ function main(Box2D) {
 		"green"
 	];
 	
-	const AREA = (document.body.clientWidth * document.body.clientHeight) / (SCALE * SCALE);
+	const AREA = (viewportWidth * viewportHeight) / (SCALE * SCALE);
 	const RADIUS = 0.25;
 	const BALLS_COUNT = (AREA / (RADIUS * 2 * RADIUS * 2)) * 0.5;
 	const STRIDE = Math.floor(GLASS_WIDTH / (RADIUS * 2));
